@@ -1,12 +1,10 @@
 package com.mojtaba.jobboard.controller;
 
+import com.mojtaba.jobboard.dto.job.JobRequest;
 import com.mojtaba.jobboard.model.Job;
 import com.mojtaba.jobboard.service.JobService;
 
-import org.springframework.context.annotation.Lazy;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,5 +21,25 @@ public class JobController {
     @GetMapping
     public List<Job> getAllJob() {
         return jobService.getAllJobs();
+    }
+
+    @PostMapping
+    public Job createJob(@RequestBody JobRequest jobRequest) {
+        return jobService.createJob(jobRequest);
+    }
+
+    @GetMapping("/{id}")
+    public Job getJobById(@PathVariable Long id) {
+        return jobService.getJobById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteJob(@PathVariable Long id) {
+        jobService.deleteJob(id);
+    }
+
+    @PutMapping("/{id}")
+    public Job updateJob(@PathVariable Long id, @RequestBody JobRequest request) {
+        return jobService.updateJob(id, request);
     }
 }
