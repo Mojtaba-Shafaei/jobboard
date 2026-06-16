@@ -23,10 +23,11 @@ public class JobService {
         return jobRepository.findAll().stream().map(JobMapper::toResponse).toList();
     }
 
-    public Job createJob(JobRequest request) {
+    public JobResponse createJob(JobRequest request) {
         Job job = JobMapper.toEntity(request);
 
-        return jobRepository.save(job);
+        Job insertedJob = jobRepository.save(job);
+        return JobMapper.toResponse(insertedJob);
     }
 
     public JobResponse getJobById(Long id) {
