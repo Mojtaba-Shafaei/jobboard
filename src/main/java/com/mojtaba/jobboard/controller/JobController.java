@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
+
 @RequestMapping("/api/jobs")
 @RestController
 public class JobController {
@@ -25,7 +27,7 @@ public class JobController {
     }
 
     @PostMapping
-    public Job createJob(@RequestBody JobRequest jobRequest) {
+    public Job createJob(@RequestBody @Valid JobRequest jobRequest) {
         return jobService.createJob(jobRequest);
     }
 
@@ -40,7 +42,7 @@ public class JobController {
     }
 
     @PutMapping("/{id}")
-    public JobResponse updateJob(@PathVariable Long id, @RequestBody JobRequest request) {
+    public JobResponse updateJob(@PathVariable Long id, @RequestBody @Valid JobRequest request) {
         return jobService.updateJob(id, request);
     }
 }
