@@ -1,6 +1,7 @@
 package com.mojtaba.jobboard.service;
 
 import com.mojtaba.jobboard.dto.job.JobRequest;
+import com.mojtaba.jobboard.exception.JobNotFoundException;
 import com.mojtaba.jobboard.mapper.JobMapper;
 import com.mojtaba.jobboard.model.Job;
 import com.mojtaba.jobboard.repository.JobRepository;
@@ -29,20 +30,24 @@ public class JobService {
 
     public Job getJobById(Long id) {
         return jobRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("job not found"));
+                .orElseThrow(() -> new JobNotFoundException(id));
     }
 
     public void deleteJob(long id) {
         if (jobRepository.existsById(id)) {
             jobRepository.deleteById(id);
         } else {
-            throw new RuntimeException("Job not found");
+            throw new JobNotFoundException(id);
         }
     }
 
     public Job updateJob(Long id, JobRequest request) {
-        Job updated = JobMapper.toEntity(request);
-        updated.setId(id);
-        return jobRepository.save(updated);
+        if (jobRepository.existsById(id)) {
+            Job updated = JobMapper.toEntity(request);
+            updated.setId(id);
+            return jobRepository.save(updated);
+        } else {
+            throw new JobNotFoundException(id);
+        }
     }
 }
