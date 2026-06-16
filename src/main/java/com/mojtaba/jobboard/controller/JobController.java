@@ -1,6 +1,7 @@
 package com.mojtaba.jobboard.controller;
 
 import com.mojtaba.jobboard.dto.job.JobRequest;
+import com.mojtaba.jobboard.dto.job.JobResponse;
 import com.mojtaba.jobboard.model.Job;
 import com.mojtaba.jobboard.service.JobService;
 
@@ -19,7 +20,7 @@ public class JobController {
     }
 
     @GetMapping
-    public List<Job> getAllJob() {
+    public List<JobResponse> getAllJob() {
         return jobService.getAllJobs();
     }
 
@@ -29,7 +30,7 @@ public class JobController {
     }
 
     @GetMapping("/{id}")
-    public Job getJobById(@PathVariable Long id) {
+    public JobResponse getJobById(@PathVariable Long id) {
         return jobService.getJobById(id);
     }
 
@@ -39,7 +40,7 @@ public class JobController {
     }
 
     @PutMapping("/{id}")
-    public Job updateJob(@PathVariable Long id, @RequestBody JobRequest request) {
+    public JobResponse updateJob(@PathVariable Long id, @RequestBody JobRequest request) {
         return jobService.updateJob(id, request);
     }
 }

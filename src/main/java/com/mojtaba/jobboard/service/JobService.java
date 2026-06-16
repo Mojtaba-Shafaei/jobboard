@@ -1,6 +1,7 @@
 package com.mojtaba.jobboard.service;
 
 import com.mojtaba.jobboard.dto.job.JobRequest;
+import com.mojtaba.jobboard.dto.job.JobResponse;
 import com.mojtaba.jobboard.exception.JobNotFoundException;
 import com.mojtaba.jobboard.mapper.JobMapper;
 import com.mojtaba.jobboard.model.Job;
@@ -18,8 +19,8 @@ public class JobService {
         this.jobRepository = jobRepository;
     }
 
-    public List<Job> getAllJobs() {
-        return jobRepository.findAll();
+    public List<JobResponse> getAllJobs() {
+        return jobRepository.findAll().stream().map(JobMapper::toResponse).toList();
     }
 
     public Job createJob(JobRequest request) {
@@ -28,9 +29,11 @@ public class JobService {
         return jobRepository.save(job);
     }
 
-    public Job getJobById(Long id) {
-        return jobRepository.findById(id)
+    public JobResponse getJobById(Long id) {
+        Job job = jobRepository.findById(id)
                 .orElseThrow(() -> new JobNotFoundException(id));
+
+        return JobMapper.toResponse(job);
     }
 
     public void deleteJob(long id) {
@@ -41,11 +44,12 @@ public class JobService {
         }
     }
 
-    public Job updateJob(Long id, JobRequest request) {
+    public JobResponse updateJob(Long id, JobRequest request) {
         if (jobRepository.existsById(id)) {
             Job updated = JobMapper.toEntity(request);
             updated.setId(id);
-            return jobRepository.save(updated);
+            Job job = jobRepository.save(updated);
+            return JobMapper.toResponse(job);
         } else {
             throw new JobNotFoundException(id);
         }
