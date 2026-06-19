@@ -1,0 +1,11 @@
+payload
+{"title":"Android Developer","company":"Google","location":"Berlin","description":"Looking for Android dev","salary":5000}
+{"title":"iOS Developer","company":"Apple","location":"London","description":"Looking for iOS dev","salary":6000}
+{"title":"Backend Engineer","company":"Amazon","location":"Paris","description":"Looking for Backend dev","salary":5500}
+{"title":"Frontend Developer","company":"Microsoft","location":"Madrid","description":"Looking for Frontend dev","salary":5200}
+{"title":"DevOps Engineer","company":"Netflix","location":"Amsterdam","description":"Looking for DevOps","salary":5800}
+{"title":"Data Scientist","company":"Spotify","location":"Stockholm","description":"Looking for Data Science","salary":6500}
+{"title":"Product Manager","company":"Adobe","location":"Munich","description":"Looking for PM","salary":7000}
+{"title":"QA Engineer","company":"Oracle","location":"Dublin","description":"Looking for QA","salary":4500}
+{"title":"Security Engineer","company":"Cisco","location":"Prague","description":"Looking for Security","salary":6200}
+{"title":"Cloud Architect","company":"IBM","location":"Warsaw","description":"Looking for Cloud","salary":7500}
