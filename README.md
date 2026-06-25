@@ -14,7 +14,7 @@ This project is designed for learning backend development and as a portfolio pro
 - ⭐ Bookmark jobs (optional extension)
 - 📄 Pagination support
 - 🧱 Clean layered architecture (Controller → Service → Repository)
-- 🗄️ MySQL integration with JPA/Hibernate
+- 🗄️ PostgreSQL integration with JPA/Hibernate
 - ⚠️ Global exception handling
 
 ---
@@ -27,7 +27,7 @@ This project is designed for learning backend development and as a portfolio pro
 - Spring Security (JWT)
 - Spring Data JPA
 - Hibernate
-- MySQL
+- PostgreSQL
 - Maven
 - Lombok
 
