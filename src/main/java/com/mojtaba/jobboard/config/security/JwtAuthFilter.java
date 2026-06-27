@@ -1,23 +1,28 @@
 package com.mojtaba.jobboard.config.security;
 
+import com.mojtaba.jobboard.exception.ErrorResponse;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import tools.jackson.databind.ObjectMapper;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
   private final JwtService jwtService;
+  private final ObjectMapper objectMapper;
 
-  public JwtAuthFilter(JwtService jwtService) {
+  public JwtAuthFilter(JwtService jwtService, ObjectMapper objectMapper) {
     this.jwtService = jwtService;
+    this.objectMapper = objectMapper;
   }
 
   @Override
@@ -44,16 +49,29 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     try {
       String username = jwtService.extractUsername(token);
 
-      if (username != null) {
+      if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
         UsernamePasswordAuthenticationToken auth =
             new UsernamePasswordAuthenticationToken(
                 username, null, List.of(new SimpleGrantedAuthority("USER")));
-
         SecurityContextHolder.getContext().setAuthentication(auth);
       }
 
     } catch (Exception ex) {
+      SecurityContextHolder.clearContext();
+
+      ErrorResponse errorResponse =
+          new ErrorResponse(
+              401,
+              "Unauthorized",
+              "Invalid token",
+              request.getRequestURI(),
+              request.getMethod(),
+              Collections.emptyList());
+
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      response.setContentType("application/json");
+      response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
+      response.getWriter().flush();
       return;
     }
 
