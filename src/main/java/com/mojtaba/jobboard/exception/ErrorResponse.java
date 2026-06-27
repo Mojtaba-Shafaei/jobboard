@@ -1,9 +1,12 @@
 package com.mojtaba.jobboard.exception;
 
+import org.jspecify.annotations.Nullable;
+
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import lombok.Getter;
 
@@ -15,10 +18,15 @@ public class ErrorResponse {
   private final String message;
   private final String path;
   private final String method;
-  private final List<String> details;
+  @Nullable private final List<String> details;
 
   public ErrorResponse(
-      int status, String error, String message, String path, String method, List<String> details) {
+      int status,
+      String error,
+      String message,
+      String path,
+      String method,
+      @Nullable List<String> details) {
     this.timestamp = LocalDateTime.now();
     this.status = status;
     this.error = error;

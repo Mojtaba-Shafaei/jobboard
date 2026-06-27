@@ -88,6 +88,22 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
   }
 
+  // 401 - UserNotFoundException
+  @ExceptionHandler(UserNotFoundException.class)
+  public ResponseEntity<ErrorResponse> handleUserNotFoundException(
+      UserNotFoundException ex, HttpServletRequest request) {
+    ErrorResponse error =
+        new ErrorResponse(
+            401,
+            "User Not Found",
+            ex.getMessage(),
+            request.getRequestURI(),
+            request.getMethod(),
+            null);
+
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+  }
+
   // 401 - Unauthorized
   @ExceptionHandler(UnauthorizedException.class)
   @ResponseStatus(HttpStatus.UNAUTHORIZED)
