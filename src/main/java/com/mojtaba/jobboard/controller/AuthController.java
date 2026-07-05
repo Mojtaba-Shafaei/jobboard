@@ -1,36 +1,49 @@
 package com.mojtaba.jobboard.controller;
 
 import com.mojtaba.jobboard.config.security.JwtService;
-
+import com.mojtaba.jobboard.dto.auth.AuthResponse;
+import com.mojtaba.jobboard.dto.auth.LoginRequest;
+import com.mojtaba.jobboard.exception.InvalidCredentialsException;
+import com.mojtaba.jobboard.exception.UserNotFoundException;
+import com.mojtaba.jobboard.model.User;
+import com.mojtaba.jobboard.repository.UserRepository;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-    private final JwtService jwtService;
+  private final JwtService jwtService;
+  private final UserRepository userRepository;
+  private final PasswordEncoder passwordEncoder;
 
-    public AuthController(JwtService jwtService) {
-        this.jwtService = jwtService;
+  public AuthController(
+      JwtService jwtService, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    this.jwtService = jwtService;
+    this.userRepository = userRepository;
+    this.passwordEncoder = passwordEncoder;
+  }
+
+  @PostMapping("/login")
+  public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
+    String username = request.getUsername();
+    String password = request.getPassword();
+
+    User user =
+        userRepository
+            .findByUsername(username)
+            .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+    if (!passwordEncoder.matches(password, user.getPassword())) {
+      throw new InvalidCredentialsException("Invalid credentials");
     }
 
-    @PostMapping("/login")
-    public Map<String, String> login(@RequestBody Map<String, String> request) {
+    String token = jwtService.generateToken(user.getUsername());
 
-        String username = request.get("username");
-        String password = request.get("password");
-
-        // TEMP validation
-        if (!"admin".equals(username) || !"1234".equals(password)) {
-            throw new RuntimeException("Invalid credentials");
-        }
-
-        String token = jwtService.generateToken(username);
-
-        return Map.of("token", token);
-    }
+    return ResponseEntity.ok(new AuthResponse(token));
+  }
 }

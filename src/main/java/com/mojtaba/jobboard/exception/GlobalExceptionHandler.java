@@ -72,7 +72,39 @@ public class GlobalExceptionHandler {
         Collections.emptyList());
   }
 
-  // 401 - Wrong Credential
+  // 401 - InvalidCredentials
+  @ExceptionHandler(InvalidCredentialsException.class)
+  public ResponseEntity<ErrorResponse> handleInvalidCredentials(
+      InvalidCredentialsException ex, HttpServletRequest request) {
+    ErrorResponse error =
+        new ErrorResponse(
+            401,
+            "Unauthorized",
+            ex.getMessage(),
+            request.getRequestURI(),
+            request.getMethod(),
+            Collections.emptyList());
+
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+  }
+
+  // 401 - UserNotFoundException
+  @ExceptionHandler(UserNotFoundException.class)
+  public ResponseEntity<ErrorResponse> handleUserNotFoundException(
+      UserNotFoundException ex, HttpServletRequest request) {
+    ErrorResponse error =
+        new ErrorResponse(
+            401,
+            "User Not Found",
+            ex.getMessage(),
+            request.getRequestURI(),
+            request.getMethod(),
+            null);
+
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+  }
+
+  // 401 - Unauthorized
   @ExceptionHandler(UnauthorizedException.class)
   @ResponseStatus(HttpStatus.UNAUTHORIZED)
   public ResponseEntity<ErrorResponse> handleAuth(
