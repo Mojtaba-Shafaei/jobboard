@@ -2,7 +2,7 @@
 
 Personal R&D project — built to deepen full‑stack architecture understanding, so I can design and build **more robust mobile ↔ server integrations as a Senior Android Developer**.
 
-After 8+ years consuming REST APIs on Android, I wanted to build one properly: with clean contracts, proper security, predictable error handling and production‑grade structure. Patterns from this project were directly applied when I built the **real‑time two‑way flight data sync engine and OAuth 2.0 SSO flows at FL3XX Austria**.
+After 8+ years consuming REST APIs on Android, I wanted to build one properly: with clean contracts, proper security, predictable error handling and production‑grade structure. 
 
 This is not a minimal tutorial: every layer is separated, every edge case considered, every public surface follows REST conventions.
 
