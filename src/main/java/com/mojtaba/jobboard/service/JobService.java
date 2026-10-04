@@ -7,9 +7,9 @@ import com.mojtaba.jobboard.mapper.JobMapper;
 import com.mojtaba.jobboard.model.Job;
 import com.mojtaba.jobboard.repository.JobRepository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class JobService {
@@ -19,8 +19,8 @@ public class JobService {
         this.jobRepository = jobRepository;
     }
 
-    public List<JobResponse> getAllJobs() {
-        return jobRepository.findAll().stream().map(JobMapper::toResponse).toList();
+    public Page<JobResponse> getAllJobs(Pageable pageable) {
+        return jobRepository.findAll(pageable).map(JobMapper::toResponse);
     }
 
     public JobResponse createJob(JobRequest request) {
