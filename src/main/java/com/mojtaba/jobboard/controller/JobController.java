@@ -5,9 +5,9 @@ import com.mojtaba.jobboard.dto.job.JobResponse;
 import com.mojtaba.jobboard.model.Job;
 import com.mojtaba.jobboard.service.JobService;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import jakarta.validation.Valid;
 
@@ -22,8 +22,10 @@ public class JobController {
     }
 
     @GetMapping
-    public List<JobResponse> getAllJob() {
-        return jobService.getAllJobs();
+    public Page<JobResponse> getAllJob(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return jobService.getAllJobs(PageRequest.of(page, Math.min(size, 100)));
     }
 
     @PostMapping
