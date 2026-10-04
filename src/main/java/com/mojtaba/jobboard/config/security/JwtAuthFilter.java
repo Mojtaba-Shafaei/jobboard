@@ -13,15 +13,21 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import io.jsonwebtoken.JwtException;
+
 import tools.jackson.databind.ObjectMapper;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
   private final JwtService jwtService;
+  private final TokenInvalidator tokenInvalidator;
   private final ObjectMapper objectMapper;
 
-  public JwtAuthFilter(JwtService jwtService, ObjectMapper objectMapper) {
+  public JwtAuthFilter(
+      JwtService jwtService, TokenInvalidator tokenInvalidator, ObjectMapper objectMapper) {
     this.jwtService = jwtService;
+    this.tokenInvalidator = tokenInvalidator;
     this.objectMapper = objectMapper;
   }
 
@@ -48,6 +54,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     try {
       String username = jwtService.extractUsername(token);
+
+      if (tokenInvalidator.isRevoked(token)) {
+        throw new JwtException("Token has been revoked");
+      }
 
       if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
         UsernamePasswordAuthenticationToken auth =

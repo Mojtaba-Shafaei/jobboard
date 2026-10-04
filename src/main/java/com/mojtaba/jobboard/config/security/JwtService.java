@@ -26,11 +26,18 @@ public class JwtService {
     }
 
     public String extractUsername(String token) {
+        return parseClaims(token).getSubject();
+    }
+
+    public Date extractExpiration(String token) {
+        return parseClaims(token).getExpiration();
+    }
+
+    private Claims parseClaims(String token) {
         return Jwts.parserBuilder() //TODO: upgrade this library to the latest version
                 .setSigningKey(getKey())
                 .build()
                 .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+                .getBody();
     }
 }
